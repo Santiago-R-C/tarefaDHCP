@@ -7,7 +7,12 @@ RUN apt update  && apt install -y \
     bind9utils \
     dnsutils \
     tcpdump \
-    isc-dhcp-client \
+    dhcp-helper \
+    nftables \
     && rm -rf /var/lib/apt/lists/*
 
-CMD ["sleep", "infinity"]
+COPY entrypoint.sh /sbin/entrypoint.sh
+
+RUN chmod 777 /sbin/entrypoint.sh
+
+ENTRYPOINT ["/sbin/entrypoint.sh"]
