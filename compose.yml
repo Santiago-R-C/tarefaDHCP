@@ -11,10 +11,10 @@ services:
         interface_name: eth1
       rede_lannister:
         ipv4_address: 192.168.11.254
-        interface_name: eth2
+        interface_name: eth3
       rede_targaryen:
         ipv4_address: 192.168.12.254
-        interface_name: eth3
+        interface_name: eth4
     cap_add:
       - NET_ADMIN
 
@@ -31,6 +31,22 @@ services:
       - ./ned/dhcp4.json:/etc/kea/kea-dhcp4.conf
       # - ./ned/dhcp:/var/lib/kea
       - ./ned/entrypoint.sh:/sbin/entrypoint.sh
+
+  arya:
+    build: dnsserver
+    hostname: arya
+    command: -f -4
+    ports:
+      - 127.0.0.1:53:53
+    volumes:
+      - ./arya/named.conf.options:/etc/bind/named.conf.options
+      - ./arya/named.conf.local:/etc/bind/named.conf.local
+      - ./arya/zonas:/etc/bind/zonas
+    networks:
+      rede_stark:
+        ipv4_address: 192.168.10.11
+    dns:
+      - 127.0.0.1
 
   cliente1:
     build: ./cliente
@@ -109,6 +125,19 @@ services:
     networks:
       rede_lannister:
         mac_address: 02:42:ac:11:10:13
+    cap_add:
+      - NET_ADMIN
+    command: >
+      sh -c "ip addr flush dev eth0 && dhclient -v eth0 && sleep infinity"
+
+  bran:
+    build: ./cliente
+    hostname: bran
+    depends_on:
+      - ned
+    networks:
+      rede_stark:
+        mac_address: 02:42:ac:11:10:14
     cap_add:
       - NET_ADMIN
     command: >

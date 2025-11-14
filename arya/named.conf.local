@@ -1,0 +1,31 @@
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+// include "/etc/bind/zones.rfc1918";
+
+// Zona directa para stark
+zone "stark" {
+    type master;
+    file "/etc/bind/zonas/db.stark";
+};
+
+// Zona directa para lannister
+zone "lannister" {
+    type master;
+    file "/etc/bind/zonas/db.lannister";
+};
+
+// Zona directa para targaryen
+zone "targaryen" {
+    type master;
+    file "/etc/bind/zonas/db.targaryen";
+};
+
+// Zona inversa para la red 192.168.10.0/24
+zone "10.168.192.in-addr.arpa" {
+    type master;
+    file "/etc/bind/zonas/db.20.168.192";
+};
