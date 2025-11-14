@@ -2,7 +2,6 @@ services:
   router:
     build: ./router
     hostname: router
-
     networks:
       rede_wan:
         ipv4_address: 192.0.2.254
@@ -18,6 +17,7 @@ services:
         interface_name: eth3
     cap_add:
       - NET_ADMIN
+
   ned:
     build: ./kea
     hostname: ned
@@ -29,15 +29,16 @@ services:
     entrypoint: "bash -c /sbin/entrypoint.sh"
     volumes:
       - ./ned/dhcp4.json:/etc/kea/kea-dhcp4.conf
-      - ./ned/dhcp:/var/lib/kea
+      # - ./ned/dhcp:/var/lib/kea
       - ./ned/entrypoint.sh:/sbin/entrypoint.sh
-  
+
   cliente1:
     build: ./cliente
     hostname: client1
+    depends_on:
+      - ned
     networks:
       rede_stark:
-        ipv4_address: 192.168.10.3
         mac_address: 02:42:ac:11:00:10  # dirección HW fija
     cap_add:
       - NET_ADMIN
@@ -47,47 +48,72 @@ services:
   cliente2:
     build: ./cliente
     hostname: cliente2
+    depends_on:
+      - ned
     networks:
       rede_stark:
-        ipv4_address: 192.168.10.4
         mac_address: 02:42:ac:11:00:11
     cap_add:
       - NET_ADMIN
     command: >
       sh -c "ip addr flush dev eth0 && dhclient -v eth0 && sleep infinity"
+
   cliente3:
     build: ./cliente
     hostname: cliente3
+    depends_on:
+      - ned
     networks:
       rede_stark:
-        ipv4_address: 192.168.10.5
         mac_address: 02:42:ac:11:00:12
     cap_add:
       - NET_ADMIN
     command: >
       sh -c "ip addr flush dev eth0 && dhclient -v eth0 && sleep infinity"
+
   cliente4:
     build: ./cliente
     hostname: cliente4
+    depends_on:
+      - ned
     networks:
       rede_stark:
-        ipv4_address: 192.168.10.13
         mac_address: 02:42:ac:11:00:13
     cap_add:
       - NET_ADMIN
     command: >
       sh -c "ip addr flush dev eth0 && dhclient -v eth0 && sleep infinity"
+
+  cliente5:
+    build: ./cliente
+    hostname: cliente5
+    depends_on:
+      - ned
+      - cliente1
+      - cliente2
+      - cliente3
+      - cliente4
+    networks:
+      rede_stark:
+        mac_address: 02:42:ac:11:00:14
+    cap_add:
+      - NET_ADMIN
+    command: >
+      sh -c "sleep 10 && ip addr flush dev eth0 && dhclient -v eth0 && sleep infinity"
+
   cliente10:
     build: ./cliente
-    hostname: cliente4
+    hostname: cliente10
+    depends_on:
+      - ned
     networks:
       rede_lannister:
-        ipv4_address: 192.168.11.13
         mac_address: 02:42:ac:11:10:13
     cap_add:
       - NET_ADMIN
     command: >
       sh -c "ip addr flush dev eth0 && dhclient -v eth0 && sleep infinity"
+
 networks:
   rede_stark:
     driver: bridge
