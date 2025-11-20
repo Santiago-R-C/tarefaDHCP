@@ -1,5 +1,26 @@
 {
   "Dhcp4": {
+    "dhcp-ddns": {
+      "enable-updates": true,
+      "server-ip": "127.0.0.1",
+      "server-port":53001,
+      "sender-ip":"",
+      "sender-port":0,
+      "max-queue-size":1024,
+      "ncr-protocol":"UDP",
+      "ncr-format":"JSON"
+    },
+    "ddns-send-updates": true,
+    "ddns-override-no-update": false,
+    "ddns-override-client-update": false,
+    "ddns-replace-client-name": "never",
+    "ddns-generated-prefix": "myhost",
+    "ddns-qualifying-suffix": "foo.example.org",
+    "ddns-update-on-renew": false,
+    "ddns-conflict-resolution-mode": "check-with-dhcid",
+    "hostname-char-set": "",
+    "hostname-char-replacement": "",
+
     "interfaces-config": {
       "interfaces": ["eth0"]
     },
