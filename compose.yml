@@ -39,8 +39,9 @@ services:
       - NET_ADMIN
     entrypoint: "bash -c /sbin/entrypoint.sh"
     volumes:
-      - ./ned/dhcp4.jsonc:/etc/kea/kea-dhcp4.conf
-      - ./ned/dhcp-ddns.jsonc:/etc/kea/kea-dhcp-ddns.conf
+      - ./ned/dhcp4.json:/etc/kea/kea-dhcp4.conf
+      - ./ned/dhcp-ddns.json:/etc/kea/kea-dhcp-ddns.conf
+      - ./ned/kea.log:/var/log/kea/kea.log
       # - ./ned/dhcp:/var/lib/kea
       - ./ned/entrypoint.sh:/sbin/entrypoint.sh
   
