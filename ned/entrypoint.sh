@@ -9,3 +9,5 @@ rm -f /var/run/kea/kea-dhcp-ddns.kea-dhcp-ddns.pid
 kea-dhcp-ddns -d -c /etc/kea/kea-dhcp-ddns.conf  &
 
 kea-dhcp4 -c /etc/kea/kea-dhcp4.conf -d
+
+wait
